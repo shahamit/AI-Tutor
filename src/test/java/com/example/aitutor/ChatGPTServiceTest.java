@@ -42,4 +42,28 @@ public class ChatGPTServiceTest {
 
         assertEquals(CodeCorrectness.CORRECT, result);
     }
+
+    @Test
+    public void testCodeCorrectness_whenIncorrectCodeIsPassed() {
+        TutorRequest tutorRequest = new TutorRequest();
+        tutorRequest.setCode("class Fibonacci {\n" +
+                "  public static void main(String[] args) {\n" +
+                "\n" +
+                "    int n = 100, firstTerm = 0, secondTerm = 1;\n" +
+                "        \n" +
+                "    System.out.println(\"Fibonacci Series Upto \" + n + \": \");\n" +
+                "    \n" +
+                "    while (firstTerm <= n) {\n" +
+                "      System.out.print(firstTerm + \", \");\n" +
+                "\n" +
+                "      int nextTerm = firstTerm + secondTerm;\n" +
+                "\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+        Experiment exp = new Experiment("Display Fibonacci series up to a given number");
+        CodeCorrectness result = chatGPTService.isTheCodeCorrect(tutorRequest, exp);
+
+        assertEquals(CodeCorrectness.INCORRECT, result);
+    }
 }

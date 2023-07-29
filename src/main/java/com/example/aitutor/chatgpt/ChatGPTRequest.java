@@ -3,18 +3,17 @@ package com.example.aitutor.chatgpt;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatGPTRequest {
+class ChatGPTRequest {
 
     private String model;
-    private List<Message> messages;
-    private int n;
+    private String prompt;
+    private int n = 1;
     private double temperature;
 
     public ChatGPTRequest(String model, String prompt) {
         this.model = model;
 
-        this.messages = new ArrayList<>();
-        this.messages.add(new Message("user", prompt));
+        this.prompt = prompt;
     }
 
     public String getModel() {
@@ -25,12 +24,12 @@ public class ChatGPTRequest {
         this.model = model;
     }
 
-    public List<Message> getMessages() {
-        return messages;
+    public String getPrompt() {
+        return prompt;
     }
 
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
     }
 
     public int getN() {
@@ -53,7 +52,7 @@ public class ChatGPTRequest {
     public String toString() {
         return "ChatGPTRequest{" +
                 "model='" + model + '\'' +
-                ", messages=" + messages +
+                ", prompt='" + prompt + '\'' +
                 ", n=" + n +
                 ", temperature=" + temperature +
                 '}';

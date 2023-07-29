@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ChatGPTService {
@@ -31,9 +32,18 @@ public class ChatGPTService {
 
     public CodeCorrectness isTheCodeCorrect(TutorRequest tutorRequest, Experiment experiment) {
         String prompt = getCodeCorrectnessPrompt(tutorRequest, experiment);
-        String model = getModel(tutorRequest.getModel());
-
         // create a request
+        Optional<String> responseString = callChatGPT(tutorRequest.getModel(), prompt);
+
+        if (responseString.isEmpty()) return CodeCorrectness.NORESPONSE;
+        if (responseString.get().toLowerCase().contains(CodeCorrectness.INCORRECT.name().toLowerCase())) {
+            return CodeCorrectness.INCORRECT;
+        }
+        return CodeCorrectness.CORRECT;
+    }
+
+    private Optional<String> callChatGPT(String inputModel, String prompt) {
+        String model = getModel(inputModel);
         ChatGPTRequest request = new ChatGPTRequest(model, prompt);
 
         logger.info("Sending request to chatgpt : {}", request);
@@ -42,15 +52,11 @@ public class ChatGPTService {
         logger.info("Got a response from chatgpt : {}", response);
 
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
-            return CodeCorrectness.NORESPONSE;
+            return Optional.empty();
         }
 
         // return the first response
-        String responseString = response.getChoices().get(0).getMessage().getContent();
-        if(responseString.equalsIgnoreCase(CodeCorrectness.CORRECT.toString())) {
-            return CodeCorrectness.CORRECT;
-        }
-        return CodeCorrectness.INCORRECT;
+        return Optional.of(response.getChoices().get(0).getText().trim());
     }
 
     private String getModel(String model) {
@@ -62,11 +68,21 @@ public class ChatGPTService {
                 "this is the problem statement \"${problem}\". Below is the solution that a student has coded.  \n" +
                 "${student_code}   \n" +
                 "Tell me in one word if the above code is correct or incorrect";
-        String prompt = tutorRequest.getPrompt() == null? DEFAULT_CODE_CORRECTNESS_PROMPT: tutorRequest.getPrompt();
+        String prompt = tutorRequest.getPrompt() == null ? DEFAULT_CODE_CORRECTNESS_PROMPT : tutorRequest.getPrompt();
 
+        return replaceStandardParametersInPrompt(tutorRequest, experiment, prompt);
+    }
+
+    private String replaceStandardParametersInPrompt(TutorRequest tutorRequest, Experiment experiment, String prompt) {
         Map<String, Object> params = new HashMap<>();
         params.put("student_code", tutorRequest.getCode());
         params.put("problem", experiment.getProblem());
         return StringSubstitutor.replace(prompt, params, "${", "}");
+    }
+
+    public String generateHint(TutorRequest tutorRequest, Experiment experiment) {
+        String prompt = replaceStandardParametersInPrompt(tutorRequest, experiment, tutorRequest.getPrompt());
+        Optional<String> response = callChatGPT(tutorRequest.getModel(), prompt);
+        return response.orElse("AI Tutor could not generate any hints");
     }
 }
