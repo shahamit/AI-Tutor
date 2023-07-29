@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "aeae6493-bf2f-4100-bc96-a2ca113d56b7",
+		"name": "AI Tutor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "184128"
+	},
+	"item": [
+		{
+			"name": "Create Experiment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"problem\": \"Display Fibonacci series up to a given number\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/experiments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"experiments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Experiments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/experiments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"experiments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Experiment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/experiments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"experiments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Experiment Metrics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/experiments/1/metrics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"experiments",
+						"1",
+						"metrics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Execute Experiment With Incorrect Code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"code\": \"class Fibonacci {\\n  public static void main(String[] args) {\\n\\n    int n = 100, firstTerm = 0, secondTerm = 1;\\n        \\n    System.out.println(\\\"Fibonacci Series Upto \\\" + n + \\\": \\\");\\n    \\n    while (firstTerm <= n) {\\n      System.out.print(firstTerm + \\\", \\\");\\n\\n      firstTerm = secondTerm;\\n      secondTerm = nextTerm;\\n\\n    }\\n  }\\n}\"   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/experiments/1/execute",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"experiments",
+						"1",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Execute Experiment With Correct Code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"code\": \"class Fibonacci {\\n  public static void main(String[] args) {\\n\\n    int n = 100, firstTerm = 0, secondTerm = 1;\\n        \\n    System.out.println(\\\"Fibonacci Series Upto \\\" + n + \\\": \\\");\\n    \\n    while (firstTerm <= n) {\\n      System.out.print(firstTerm + \\\", \\\");\\n\\n      int nextTerm = firstTerm + secondTerm;\\n      firstTerm = secondTerm;\\n      secondTerm = nextTerm;\\n\\n    }\\n  }\\n}\"   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/experiments/1/execute",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"experiments",
+						"1",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Hint For Incorrect Code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prompt\": \"Assume that you are a programming teacher, and your intent is to help a student solve the given problem. You know the solution of the problem already. Your job is to analyse the student’s submitted code, and give him a hint that helps him solve the problem. Remember, you have to give the hint, not give him complete solution. \\n\\n\\n\\nProblem - \\n\\n${problem}” \\n\\n\\n\\nStudent’s input - \\n\\n${student_code}”\",\n    \"code\": \"class Fibonacci {\\n  public static void main(String[] args) {\\n\\n    int n = 100, firstTerm = 0, secondTerm = 1;\\n        \\n    System.out.println(\\\"Fibonacci Series Upto \\\" + n + \\\": \\\");\\n    \\n    while (firstTerm <= n) {\\n      System.out.print(firstTerm + \\\", \\\");\\n\\n      firstTerm = secondTerm;\\n      secondTerm = nextTerm;\\n\\n    }\\n  }\\n}\"   \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/experiments/1/hints",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"experiments",
+						"1",
+						"hints"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
