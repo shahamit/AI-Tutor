@@ -39,9 +39,8 @@ public class AITutorController {
         Optional<Experiment> experiment = experimentRepository.findById(id);
         return experiment.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-    @PostMapping(path = "/experiments/{id}/hints")
-    public void generateHint(@RequestBody TutorRequest tutorRequest) {
+    @PostMapping(path = "/experiments/{id}/execute")
+    public void executeCode(@RequestBody TutorRequest tutorRequest) {
 
     }
 }
