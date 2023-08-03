@@ -30,9 +30,11 @@ tasks.named('test') {
 }
 
 jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }	
     manifest {
-        attributes(
-	    'Class-Path': configurations.compile.collect { it.getName() }.join(' '),	
+        attributes(	    
             'Main-Class': 'com.example.aitutor.AitutorApplication'
         )
     }
