@@ -58,6 +58,9 @@ public class AITutorController {
         if(codeCorrectness == CodeCorrectness.CORRECT) {
             experimentTrackerRepository.save(ExperimentTracker.trackExecution(experimentId, CodeCorrectness.CORRECT.name()));
             return "Your code is correct";
+        } else if (codeCorrectness == CodeCorrectness.NORESPONSE) {
+            experimentTrackerRepository.save(ExperimentTracker.trackExecution(experimentId, CodeCorrectness.CORRECT.name()));
+            return "No response from chat gpt";
         }
         experimentTrackerRepository.save(ExperimentTracker.trackExecution(experimentId, CodeCorrectness.INCORRECT.name()));
         return "Your code is not correct";
