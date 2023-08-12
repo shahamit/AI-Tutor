@@ -2,15 +2,14 @@ package com.example.aitutor.chatgpt;
 
 import java.util.List;
 
-class ChatGPTResponse {
+class ChatGPT3Response {
 
     private List<Choice> choices;
 
     static class Choice {
 
         private int index;
-
-        private ChatGPTMessage message;
+        private String text;
 
         public int getIndex() {
             return index;
@@ -20,19 +19,19 @@ class ChatGPTResponse {
             this.index = index;
         }
 
-        public ChatGPTMessage getMessage() {
-            return message;
+        public String getText() {
+            return text;
         }
 
-        public void setMessage(ChatGPTMessage message) {
-            this.message = message;
+        public void setText(String text) {
+            this.text = text;
         }
 
         @Override
         public String toString() {
             return "Choice{" +
                     "index=" + index +
-                    ", responseMessage=" + message +
+                    ", text='" + text + '\'' +
                     '}';
         }
     }

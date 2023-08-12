@@ -6,14 +6,12 @@ import java.util.List;
 class ChatGPTRequest {
 
     private String model;
-    private String prompt;
-    private int n = 1;
-    private double temperature;
+
+    private List<ChatGPTMessage> messages = new ArrayList<>();
 
     public ChatGPTRequest(String model, String prompt) {
         this.model = model;
-
-        this.prompt = prompt;
+        this.messages.add(new ChatGPTMessage(prompt));
     }
 
     public String getModel() {
@@ -24,37 +22,19 @@ class ChatGPTRequest {
         this.model = model;
     }
 
-    public String getPrompt() {
-        return prompt;
+    public List<ChatGPTMessage> getMessages() {
+        return messages;
     }
 
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
-    }
-
-    public int getN() {
-        return n;
-    }
-
-    public void setN(int n) {
-        this.n = n;
-    }
-
-    public double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
+    public void setMessages(List<ChatGPTMessage> messages) {
+        this.messages = messages;
     }
 
     @Override
     public String toString() {
         return "ChatGPTRequest{" +
                 "model='" + model + '\'' +
-                ", prompt='" + prompt + '\'' +
-                ", n=" + n +
-                ", temperature=" + temperature +
+                ", messages=" + messages +
                 '}';
     }
 }

@@ -33,7 +33,7 @@ public class ChatGPTService {
     public CodeCorrectness isTheCodeCorrect(TutorRequest tutorRequest, Experiment experiment) {
         String prompt = getCodeCorrectnessPrompt(tutorRequest, experiment);
         // create a request
-        Optional<String> responseString = callChatGPT(tutorRequest.getModel(), prompt);
+        Optional<String> responseString = callChatGPTAPI(tutorRequest.getModel(), prompt);
 
         if (responseString.isEmpty()) return CodeCorrectness.NORESPONSE;
         if (responseString.get().toLowerCase().contains(CodeCorrectness.INCORRECT.name().toLowerCase())) {
@@ -42,13 +42,13 @@ public class ChatGPTService {
         return CodeCorrectness.CORRECT;
     }
 
-    private Optional<String> callChatGPT(String inputModel, String prompt) {
+    private Optional<String> callLegacyChatGPTAPI(String inputModel, String prompt) {
         String model = getModel(inputModel);
-        ChatGPTRequest request = new ChatGPTRequest(model, prompt);
+        ChatGPT3Request request = new ChatGPT3Request(model, prompt);
 
         logger.info("Sending request to chatgpt : {}", request);
         // call the API
-        ChatGPTResponse response = restTemplate.postForObject(apiUrl, request, ChatGPTResponse.class);
+        ChatGPT3Response response = restTemplate.postForObject(apiUrl, request, ChatGPT3Response.class);
         logger.info("Got a response from chatgpt : {}", response);
 
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
@@ -57,6 +57,24 @@ public class ChatGPTService {
 
         // return the first response
         return Optional.of(response.getChoices().get(0).getText().trim());
+    }
+
+    private Optional<String> callChatGPTAPI(String inputModel, String prompt) {
+        String model = getModel(inputModel);
+        ChatGPTRequest request = new ChatGPTRequest(model, prompt);
+
+        logger.info("Sending request to chatgpt : {}", request);
+        // call the API
+        ChatGPTResponse response = restTemplate.postForObject(apiUrl, request, ChatGPTResponse.class);
+        logger.info("Got a response from chatgpt : {}", response);
+
+        if (response == null || response.getChoices() == null || response.getChoices().isEmpty()
+                || response.getChoices().get(0).getMessage() == null) {
+            return Optional.empty();
+        }
+
+        // return the first response
+        return Optional.of(response.getChoices().get(0).getMessage().getContent().trim());
     }
 
     private String getModel(String model) {
@@ -82,7 +100,7 @@ public class ChatGPTService {
 
     public String generateHint(TutorRequest tutorRequest, Experiment experiment) {
         String prompt = replaceStandardParametersInPrompt(tutorRequest, experiment, tutorRequest.getPrompt());
-        Optional<String> response = callChatGPT(tutorRequest.getModel(), prompt);
+        Optional<String> response = callChatGPTAPI(tutorRequest.getModel(), prompt);
         return response.orElse("AI Tutor could not generate any hints");
     }
 }
