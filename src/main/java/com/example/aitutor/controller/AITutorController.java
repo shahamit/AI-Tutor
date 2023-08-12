@@ -37,6 +37,7 @@ public class AITutorController {
     public ResponseEntity<Experiment> createExperiment(@RequestBody Experiment experiment) {
         Experiment e = experimentRepository.save(new Experiment(experiment.getProblem()));
         experimentTrackerRepository.save(ExperimentTracker.trackExperimentCreation(e.getId()));
+        logger.info("Registered a new experiment : {}", e);
         return new ResponseEntity<>(e, HttpStatus.CREATED);
     }
 
@@ -63,6 +64,7 @@ public class AITutorController {
     }
     @PostMapping(path = "/experiments/{id}/hints", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String generateCodeHint(@PathVariable("id") long experimentId, @RequestBody TutorRequest tutorRequest) {
+        logger.info("Generating hint for input : {}", tutorRequest);
         String hintText = chatGPTService.generateHint(tutorRequest, experimentRepository.getReferenceById(experimentId));
         experimentTrackerRepository.save(ExperimentTracker.trackHintGeneration(experimentId, hintText));
         return hintText;

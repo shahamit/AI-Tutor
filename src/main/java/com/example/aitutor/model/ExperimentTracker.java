@@ -16,7 +16,7 @@ public class ExperimentTracker {
     @Column(name = "experimentId")
     private long experimentId;
 
-    @Column(name = "details")
+    @Column(name = "details", columnDefinition = "text")
     private String details;
 
     @CreationTimestamp

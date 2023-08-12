@@ -31,4 +31,13 @@ public class TutorRequest {
     public void setCode(String code) {
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "TutorRequest{" +
+                "model='" + model + '\'' +
+                ", prompt='" + prompt + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }
